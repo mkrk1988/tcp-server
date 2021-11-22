@@ -1,28 +1,29 @@
 import socket
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+BUFFER_SIZE = 1024
+my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
  
 def upload_file(file_name):
-	s.send(b'UPLOAD')
-	s.send(file_name.encode())	
+	my_socket.send(b'UPLOAD')
+	my_socket.send(file_name.encode())	
 	try:
 		with open(file_name , 'rb') as file_up:	
-			l = file_up.read(1024)
-			while l:
-				s.send(l)
-				l = file_up.read(1024)
+			data = file_up.read(BUFFER_SIZE)
+			while data:
+				my_socket.send(data)
+				data = file_up.read(BUFFER_SIZE)
 		print(f"Upload file: {file_name} successfully!")
 	except:
 		print(f"the file: {file_name} not exist, please check the name again!")
 		return
 
 def download_file(file_name):
-	s.send(b'DOWNLOAD')
-	s.send(file_name.encode())
+	my_socket.send(b'DOWNLOAD')
+	my_socket.send(file_name.encode())
 
 	with open(file_name , 'wb') as file_dwn:
 		while True:	
-			data = s.recv(1024)
+			data = my_socket.recv(1024)
 			if data:
 				file_dwn.write(data)
 			else:
@@ -31,12 +32,12 @@ def download_file(file_name):
 
 
 def list_files():
-	s.send(b'LIST')
+	my_socket.send(b'LIST')
 
 
 def exit():
-	s.send(b'EXIT')
-	s.close()
+	my_socket.send(b'EXIT')
+	my_socket.close()
 	print("Bye Bye!")
 
 def main():
@@ -75,6 +76,6 @@ if __name__ == "__main__":
 	
 	HOST = input('\nplease enter IP address of the server: ')
 	PORT = 12345
-	s.connect((HOST, PORT))
+	my_socket.connect((HOST, PORT))
 
 	main()
