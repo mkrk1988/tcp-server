@@ -49,7 +49,7 @@ def main(my_socket):
 
         cmd = input("server> ")
 
-        elif cmd == "UPLOAD":
+        if cmd == "UPLOAD":
             path = input("Please enter the full file path: ")
             upload_file(my_socket, cmd, path)
             
@@ -61,7 +61,7 @@ def main(my_socket):
             data = my_socket.recv(SIZE).decode(FORMAT)
             download_file(my_socket,data)
 
-        if cmd == "LIST":
+        elif cmd == "LIST":
             my_socket.send(cmd.encode(FORMAT))
 
         elif cmd == "EXIT":
