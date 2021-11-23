@@ -49,25 +49,21 @@ def main(my_socket):
 
         cmd = input("server> ")
 
-        if cmd == "LIST":
-            my_socket.send(cmd.encode(FORMAT))
-
-        elif cmd == "DELETE":
-            my_socket.send(f"{cmd}@{data[1]}".encode(FORMAT))
-
         elif cmd == "UPLOAD":
             path = input("Please enter the full file path: ")
             upload_file(my_socket, cmd, path)
             
         elif cmd == "DOWNLOAD":
-
             file_name = input("Please enter the file name: ")
             send_dat = f"{cmd}@{file_name}"
 
             my_socket.send(send_dat.encode(FORMAT))
             data = my_socket.recv(SIZE).decode(FORMAT)
             download_file(my_socket,data)
-            
+
+        if cmd == "LIST":
+            my_socket.send(cmd.encode(FORMAT))
+
         elif cmd == "EXIT":
             my_socket.send(cmd.encode(FORMAT))
             print("Disconnected from the server.")
